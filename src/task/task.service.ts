@@ -10,7 +10,7 @@ import { TaskModel } from './model/task.model';
 import { AddTaskDto } from './dto/addTask.dto';
 import { EditTaskDto } from './dto/editTask.dto';
 import { Status } from './enums/status.enum';
-import { updateStatusDto } from './dto/updateStatus.dto';
+import { SearchStatusDto, StatusDto } from './dto/Status.dto';
 
 @Injectable()
 export class TaskService {
@@ -21,10 +21,33 @@ export class TaskService {
     return newTask;
   }
 
-  async getTask(id?: string): Promise<TaskModel[] | TaskModel> {
-    if (id) {
+  async getTask(id?: string, query?: SearchStatusDto): Promise<TaskModel[] | TaskModel> {
+
+    console.log(id, query);
+    if (id && id!==null ) {
       return this.findTask(id);
     }
+
+    if(query?.status){
+        const tasks = await this.Task.find({status: query.status});
+        return tasks;
+    }
+
+    const tasks = await this.Task.find();
+    return tasks;
+  }
+
+  async getTaskById(id: string): Promise<TaskModel[] | TaskModel> {
+    return await this.findTask(id);
+  }
+
+  async getTasks(query?: SearchStatusDto): Promise<TaskModel[] | TaskModel> {
+
+    if(query?.status){
+        const tasks = await this.Task.find({status: query.status});
+        return tasks;
+    }
+
     const tasks = await this.Task.find();
     return tasks;
   }
@@ -38,9 +61,11 @@ export class TaskService {
     return updatedTask;
   }
 
-  async updateStatus(id: string, body: updateStatusDto): Promise<TaskModel> {
+  async updateStatus(id: string, body: StatusDto): Promise<TaskModel> {
+    if (id && id==null) {
+        return this.findTask(id);
+    }
     const task = await this.findTask(id);
-
     console.log('status to update', body);
     const updatedTask = await this.Task.findByIdAndUpdate(
       task._id,
