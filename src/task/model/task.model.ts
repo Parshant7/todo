@@ -6,5 +6,6 @@ export class TaskModel{
     taskName?: string;
     description?: string;
     date?: Date;
-    Status?: Status
+    Status?: Status;
+    isDeleted?: boolean;
 }

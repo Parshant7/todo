@@ -1,22 +1,31 @@
-import { Schema } from "mongoose";
-import { Status } from "../enums/status.enum";
+import { Schema } from 'mongoose';
+import { Status } from '../enums/status.enum';
 
-export const taskSchema = new Schema({
+export const taskSchema = new Schema(
+  {
     taskName: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     date: {
-        type: Date,
-        required: true
+      type: Date,
+      required: true,
     },
     status: {
-        type: String,
-        enum: Status,
-        default: Status.InProgress
-    }
-})
+      type: String,
+      enum: Status,
+      default: Status.InProgress,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
